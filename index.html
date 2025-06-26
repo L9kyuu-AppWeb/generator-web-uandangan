@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Generator Website Undangan Pernikahan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ffd93d);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group input[type="time"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .checkbox-item:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .checkbox-item input[type="checkbox"]:checked + label {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .checkbox-item.checked {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: #667eea;
+        }
+
+        .radio-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .radio-item:hover {
+            background: #e9ecef;
+            transform: translateY(-1px);
+        }
+
+        .radio-item input[type="radio"] {
+            margin-right: 8px;
+        }
+
+        .radio-item.selected {
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid #667eea;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .conditional-input {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 10px;
+            display: none;
+        }
+
+        .conditional-input.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 30px auto;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .result-container {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            display: none;
+        }
+
+        .result-container.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-text {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 200px;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .checkbox-group,
+            .radio-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎊 Wedding Website Generator 🎊</h1>
+            <p>Buat prompt untuk website undangan pernikahan impianmu</p>
+        </div>
+        
+        <div class="form-container">
+            <form id="weddingForm">
+                <div class="form-group">
+                    <label for="groomName">Nama Lengkap Pengantin Pria:</label>
+                    <input type="text" id="groomName" name="groomName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="brideName">Nama Lengkap Pengantin Wanita:</label>
+                    <input type="text" id="brideName" name="brideName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="weddingDate">Tanggal Pernikahan:</label>
+                    <input type="date" id="weddingDate" name="weddingDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="akadTime">Waktu Akad Nikah:</label>
+                    <input type="time" id="akadTime" name="akadTime" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="receptionTime">Waktu Resepsi:</label>
+                    <input type="time" id="receptionTime" name="receptionTime" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="akadLocation">Lokasi Akad Nikah:</label>
+                    <input type="text" id="akadLocation" name="akadLocation" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="receptionLocation">Lokasi Resepsi:</label>
+                    <input type="text" id="receptionLocation" name="receptionLocation" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Pilih Tema Warna Website Pernikahan:</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="dustyRose" name="colorTheme" value="Dusty Rose">
+                            <label for="dustyRose">Dusty Rose</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="sageGreen" name="colorTheme" value="Sage Green">
+                            <label for="sageGreen">Sage Green</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="champagne" name="colorTheme" value="Champagne / Gold">
+                            <label for="champagne">Champagne / Gold</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="ivory" name="colorTheme" value="Ivory / Off White">
+                            <label for="ivory">Ivory / Off White</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="blushPink" name="colorTheme" value="Blush Pink">
+                            <label for="blushPink">Blush Pink</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="lavender" name="colorTheme" value="Lavender / Lilac">
+                            <label for="lavender">Lavender / Lilac</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="emerald" name="colorTheme" value="Emerald Green">
+                            <label for="emerald">Emerald Green</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="navyBlue" name="colorTheme" value="Navy Blue">
+                            <label for="navyBlue">Navy Blue</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="terracotta" name="colorTheme" value="Terracotta / Burnt Orange">
+                            <label for="terracotta">Terracotta / Burnt Orange</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="maroon" name="colorTheme" value="Maroon / Wine Red">
+                            <label for="maroon">Maroon / Wine Red</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="peach" name="colorTheme" value="Peach / Coral">
+                            <label for="peach">Peach / Coral</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="blackWhite" name="colorTheme" value="Black & White">
+                            <label for="blackWhite">Black & White</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="dustyBlue" name="colorTheme" value="Dusty Blue">
+                            <label for="dustyBlue">Dusty Blue</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Gaya Visual Website yang Diinginkan:</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="minimalist" name="visualStyle" value="Minimalis elegan">
+                            <label for="minimalist">Minimalis elegan</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="rustic" name="visualStyle" value="Rustic">
+                            <label for="rustic">Rustic</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="floral" name="visualStyle" value="Floral / Botanical">
+                            <label for="floral">Floral / Botanical</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="modernGlam" name="visualStyle" value="Modern glam">
+                            <label for="modernGlam">Modern glam</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="classic" name="visualStyle" value="Classic / Traditional">
+                            <label for="classic">Classic / Traditional</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="bohemian" name="visualStyle" value="Bohemian">
+                            <label for="bohemian">Bohemian</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="cuteFun" name="visualStyle" value="Cute & Fun">
+                            <label for="cuteFun">Cute & Fun</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="cultural" name="visualStyle" value="Kultural / Adat">
+                            <label for="cultural">Kultural / Adat</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="darkMode" name="visualStyle" value="Dark mode / Moody">
+                            <label for="darkMode">Dark mode / Moody</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="monochrome" name="visualStyle" value="Monokrom hitam putih">
+                            <label for="monochrome">Monokrom hitam putih</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Elemen yang Ingin Ditampilkan di Website (boleh pilih lebih dari satu):</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="heroImage" name="elements" value="Hero image pasangan">
+                            <label for="heroImage">Hero image pasangan</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="countdown" name="elements" value="Countdown timer">
+                            <label for="countdown">Countdown timer</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="rsvp" name="elements" value="RSVP form">
+                            <label for="rsvp">RSVP form</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="gallery" name="elements" value="Galeri foto pasangan">
+                            <label for="gallery">Galeri foto pasangan</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="music" name="elements" value="Background music">
+                            <label for="music">Background music</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="maps" name="elements" value="Google Maps lokasi">
+                            <label for="maps">Google Maps lokasi</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="gift" name="elements" value="Wedding gift">
+                            <label for="gift">Wedding gift</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="wishes" name="elements" value="Ucapan dari tamu">
+                            <label for="wishes">Ucapan dari tamu</label>
+                        </div>
+                    </div>
+
+                    <div id="heroImageInput" class="conditional-input">
+                        <label for="heroImageLink">Link Google Drive Hero Image:</label>
+                        <input type="text" id="heroImageLink" name="heroImageLink" placeholder="Masukkan link Google Drive">
+                    </div>
+
+                    <div id="galleryInput" class="conditional-input">
+                        <label>Link Google Drive untuk Galeri Foto (6 foto):</label>
+                        <input type="text" id="gallery1" name="gallery1" placeholder="Link foto 1" style="margin-bottom: 10px;">
+                        <input type="text" id="gallery2" name="gallery2" placeholder="Link foto 2" style="margin-bottom: 10px;">
+                        <input type="text" id="gallery3" name="gallery3" placeholder="Link foto 3" style="margin-bottom: 10px;">
+                        <input type="text" id="gallery4" name="gallery4" placeholder="Link foto 4" style="margin-bottom: 10px;">
+                        <input type="text" id="gallery5" name="gallery5" placeholder="Link foto 5" style="margin-bottom: 10px;">
+                        <input type="text" id="gallery6" name="gallery6" placeholder="Link foto 6">
+                    </div>
+
+                    <div id="musicInput" class="conditional-input">
+                        <label for="musicLink">Link Background Music:</label>
+                        <input type="text" id="musicLink" name="musicLink" placeholder="Masukkan link musik">
+                    </div>
+
+                    <div id="giftInput" class="conditional-input">
+                        <label for="accountNumber">Nomor Rekening untuk Wedding Gift:</label>
+                        <input type="text" id="accountNumber" name="accountNumber" placeholder="Contoh: BCA 1234567890 a.n. John Doe">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="loveStory">Cerita Cinta Kalian:</label>
+                    <textarea id="loveStory" name="loveStory" placeholder="Ceritakan secara singkat bagaimana kalian bertemu atau perjalanan cinta kalian..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="wishesIntro">Kata-kata Pembuka untuk Kolom Ucapan dari Tamu:</label>
+                    <textarea id="wishesIntro" name="wishesIntro" placeholder="Contoh: Berikan ucapan terbaik untuk pasangan bahagia ini..." required></textarea>
+                </div>
+
+                <button type="button" class="generate-btn" onclick="generatePrompt()">
+                    ✨ Generate Prompt Website Pernikahan ✨
+                </button>
+            </form>
+
+            <div id="resultContainer" class="result-container">
+                <h3>🎉 Prompt Siap Pakai:</h3>
+                <div id="resultText" class="result-text"></div>
+                <button class="copy-btn" onclick="copyToClipboard()">📋 Copy Prompt</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Handle checkbox interactions
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const checkboxItem = this.closest('.checkbox-item');
+                if (this.checked) {
+                    checkboxItem.classList.add('checked');
+                } else {
+                    checkboxItem.classList.remove('checked');
+                }
+
+                // Show/hide conditional inputs
+                handleConditionalInputs();
+            });
+        });
+
+        // Handle radio button interactions
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Remove selected class from all items in the same group
+                document.querySelectorAll(`input[name="${this.name}"]`).forEach(r => {
+                    r.closest('.radio-item').classList.remove('selected');
+                });
+                
+                // Add selected class to current item
+                this.closest('.radio-item').classList.add('selected');
+            });
+        });
+
+        function handleConditionalInputs() {
+            // Hero Image
+            const heroImageCheckbox = document.getElementById('heroImage');
+            const heroImageInput = document.getElementById('heroImageInput');
+            if (heroImageCheckbox.checked) {
+                heroImageInput.classList.add('show');
+            } else {
+                heroImageInput.classList.remove('show');
+            }
+
+            // Gallery
+            const galleryCheckbox = document.getElementById('gallery');
+            const galleryInput = document.getElementById('galleryInput');
+            if (galleryCheckbox.checked) {
+                galleryInput.classList.add('show');
+            } else {
+                galleryInput.classList.remove('show');
+            }
+
+            // Music
+            const musicCheckbox = document.getElementById('music');
+            const musicInput = document.getElementById('musicInput');
+            if (musicCheckbox.checked) {
+                musicInput.classList.add('show');
+            } else {
+                musicInput.classList.remove('show');
+            }
+
+            // Gift
+            const giftCheckbox = document.getElementById('gift');
+            const giftInput = document.getElementById('giftInput');
+            if (giftCheckbox.checked) {
+                giftInput.classList.add('show');
+            } else {
+                giftInput.classList.remove('show');
+            }
+        }
+
+        function convertGoogleDriveLink(link) {
+            if (!link) return '';
+            
+            // Extract file ID from Google Drive link
+            const match = link.match(/\/d\/([a-zA-Z0-9-_]+)/);
+            if (match) {
+                return `https://lh3.googleusercontent.com/d/${match[1]}`;
+            }
+            return link;
+        }
+
+        function generatePrompt() {
+            const form = document.getElementById('weddingForm');
+            const formData = new FormData(form);
+            
+            // Get form values
+            const groomName = formData.get('groomName');
+            const brideName = formData.get('brideName');
+            const weddingDate = formData.get('weddingDate');
+            const akadTime = formData.get('akadTime');
+            const receptionTime = formData.get('receptionTime');
+            const akadLocation = formData.get('akadLocation');
+            const receptionLocation = formData.get('receptionLocation');
+            const colorTheme = formData.get('colorTheme');
+            const visualStyle = formData.get('visualStyle');
+            const loveStory = formData.get('loveStory');
+            const wishesIntro = formData.get('wishesIntro');
+
+            // Get selected elements
+            const selectedElements = [];
+            const checkboxes = document.querySelectorAll('input[name="elements"]:checked');
+            checkboxes.forEach(cb => selectedElements.push(cb.value));
+
+            // Validate required fields
+            if (!groomName || !brideName || !weddingDate || !akadTime || !receptionTime || 
+                !akadLocation || !receptionLocation || !colorTheme || !visualStyle || 
+                !loveStory || !wishesIntro) {
+                alert('Mohon lengkapi semua field yang wajib diisi!');
+                return;
+            }
+
+            // Format date
+            const dateObj = new Date(weddingDate);
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const formattedDate = dateObj.toLocaleDateString('id-ID', options);
+
+            // Build prompt
+            let prompt = `Saya ingin kamu bertindak sebagai seorang frontend developer profesional yang membuat website undangan pernikahan digital. Website ini harus memiliki desain yang modern, elegan, dan responsif (mobile-first). Gunakan efek animasi halus saat scroll, parallax ringan, serta transisi yang lembut.
+
+Detail Pernikahan:
+- Pengantin Pria: ${groomName}
+- Pengantin Wanita: ${brideName}
+- Tanggal: ${formattedDate}
+- Waktu Akad Nikah: ${akadTime}
+- Waktu Resepsi: ${receptionTime}
+- Lokasi Akad Nikah: ${akadLocation}
+- Lokasi Resepsi: ${receptionLocation}
+
+Tema Desain:
+- Warna: ${colorTheme}
+- Gaya Visual: ${visualStyle}
+
+Cerita Cinta:
+"${loveStory}"
+
+Website mencakup beberapa bagian utama seperti:`;
+
+            // Add elements
+            if (selectedElements.length > 0) {
+                prompt += '\n\nElemen yang harus ada:';
+                selectedElements.forEach(element => {
+                    prompt += `\n- ${element}`;
+                    
+                    // Add specific details for certain elements
+                    if (element === 'Hero image pasangan') {
+                        const heroLink = formData.get('heroImageLink');
+                        if (heroLink) {
+                            prompt += ` (Gunakan gambar dari: ${convertGoogleDriveLink(heroLink)})`;
+                        }
+                    }
+                    
+                    if (element === 'Galeri foto pasangan') {
+                        const galleryLinks = [];
+                        for (let i = 1; i <= 6; i++) {
+                            const link = formData.get(`gallery${i}`);
+                            if (link) {
+                                galleryLinks.push(convertGoogleDriveLink(link));
+                            }
+                        }
+                        if (galleryLinks.length > 0) {
+                            prompt += ` (Gunakan foto dari: ${galleryLinks.join(', ')})`;
+                        }
+                    }
+                    
+                    if (element === 'Background music') {
+                        const musicLink = formData.get('musicLink');
+                        if (musicLink) {
+                            prompt += ` (Link musik: ${musicLink})`;
+                        }
+                    }
+                    
+                    if (element === 'Wedding gift') {
+                        const accountNumber = formData.get('accountNumber');
+                        if (accountNumber) {
+                            prompt += ` (Rekening: ${accountNumber})`;
+                        }
+                    }
+                    
+                    if (element === 'Ucapan dari tamu') {
+                        prompt += ` (Kata pembuka: "${wishesIntro}")`;
+                    }
+                });
+            }
+
+            prompt += `\n\nPastikan website memiliki:
+1. Header dengan navigasi yang sticky
+2. Hero section yang menarik dengan foto pasangan
+3. About section dengan cerita cinta
+4. Detail acara (tanggal, waktu, lokasi)
+5. Footer yang elegan
+
+Gunakan HTML, CSS, dan JavaScript dalam satu file. Buat kode yang bersih, terorganisir, dan siap digunakan. Pastikan semua animasi dan efek visual berjalan dengan smooth dan tidak mengganggu performa website.`;
+
+            // Display result
+            document.getElementById('resultText').textContent = prompt;
+            document.getElementById('resultContainer').classList.add('show');
+            
+            // Scroll to result
+            document.getElementById('resultContainer').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+    window.copyToClipboard = function () {
+        const resultText = document.getElementById('resultText').textContent;
+        navigator.clipboard.writeText(resultText).then(() => {
+            const copyBtn = document.querySelector('.copy-btn');
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = '✅ Tersalin!';
+            copyBtn.style.background = '#20c997';
+
+            setTimeout(() => {
+                copyBtn.textContent = originalText;
+                copyBtn.style.background = '#28a745';
+            }, 2000);
+        }).catch(err => {
+            alert('Gagal menyalin teks. Silakan salin manual.');
+        });
+    }
+});
+
+        // Initialize conditional inputs on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            handleConditionalInputs();
+        });
+    </script>
+</body>
+</html>
